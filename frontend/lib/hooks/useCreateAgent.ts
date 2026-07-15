@@ -19,12 +19,12 @@ function friendlyCreationError(error: unknown) {
     return "Insufficient RITUAL balance for this operation.";
   }
   if (lower.includes("no registered ritual llm executor")) {
-    return "No registered Ritual LLM executor is available.";
+    return "Ritual services are preparing the request. Please try again shortly.";
   }
   if (lower.includes("deployment") || lower.includes("factory")) {
-    return "Ritual Arena contracts are not ready for safe agent creation. No transaction was sent.";
+    return "Ritual Arena is preparing the request. Please try again shortly.";
   }
-  return message;
+  return "The request could not be completed. Please try again.";
 }
 
 /// Hook d'écriture : crée un agent PUIS le rend opérationnel — câblage des
@@ -111,7 +111,7 @@ export function useCreateAgent() {
 
       // 3) Câbler uniquement l'exécuteur LLM requis par l'autopilote. Le prix HTTP
       //    est optionnel et ne doit pas ajouter une transaction au chemin critique.
-      setStep("Wiring LLM executor…");
+      setStep("Configuring autonomous engine…");
       const llmHash = await writeContractAsync({
         address: agent,
         abi: tradingAgentAbi,

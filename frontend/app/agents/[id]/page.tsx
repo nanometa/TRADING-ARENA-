@@ -8,7 +8,6 @@ import { useAgents } from "@/lib/hooks/useAgents";
 import { useAgentStats } from "@/lib/hooks/useAgentStats";
 import { useAgentControls } from "@/lib/hooks/useAgentControls";
 import { useAgentRuntimeStatus } from "@/lib/hooks/useAgentRuntimeStatus";
-import { useExecutorHealth } from "@/lib/hooks/useExecutorHealth";
 import { TxErrorToast } from "@/components/TxErrorToast";
 
 const STRATEGY_LABEL = ["Trend Following", "Mean Reversion"];
@@ -29,10 +28,6 @@ export default function AgentDetailPage() {
   );
   const runtime = useAgentRuntimeStatus(
     (agent?.agent ?? "0x0000000000000000000000000000000000000000") as `0x${string}`,
-  );
-  const executorHealth = useExecutorHealth();
-  const activeExecutorHealth = executorHealth.data?.executors.find(
-    (executor) => executor.address.toLowerCase() === runtime.llmExecutor.toLowerCase(),
   );
 
   const isOwner =
@@ -64,19 +59,7 @@ export default function AgentDetailPage() {
               label="Schedule"
               value={`${runtime.numCalls} call(s) · every ${runtime.frequency} blocks · TTL ${runtime.ttl}`}
             />
-            <Info
-              label="LLM Executor Health"
-              value={activeExecutorHealth?.status ?? (executorHealth.isLoading ? "checking" : "unknown")}
-            />
-            <Info label="LLM Executor" value={runtime.llmExecutor} mono />
-            <Info
-              label="Consecutive LLM Errors"
-              value={
-                runtime.supportsLlmErrorCounter
-                  ? String(runtime.consecutiveLlmErrors)
-                  : "Not exposed by this agent generation"
-              }
-            />
+            <Info label="Execution Node" value={runtime.llmExecutor} mono />
             <Info
               label="Agent Fee Escrow"
               value={`${Number(formatEther(runtime.feeEscrow)).toFixed(6)} RITUAL`}
