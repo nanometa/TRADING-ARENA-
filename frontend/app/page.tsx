@@ -1,6 +1,7 @@
 "use client";
 
 import { ReactNode } from "react";
+import Image from "next/image";
 import { motion, useReducedMotion } from "framer-motion";
 import { AnimatedCounter } from "@/components/AnimatedCounter";
 import { ConnectionGuard } from "@/components/ConnectionGuard";
@@ -12,6 +13,7 @@ import { useTrades } from "@/lib/hooks/useTrades";
 import { useBtcPrice } from "@/lib/hooks/useBtcPrice";
 
 export default function DashboardPage() {
+  const reduceMotion = useReducedMotion();
   const { activeCount, agents } = useAgents();
   const { trades } = useTrades();
   const { price: btcPrice } = useBtcPrice();
@@ -48,6 +50,31 @@ export default function DashboardPage() {
       <section className="relative min-h-[92svh] overflow-hidden px-6 pb-20 pt-16 md:pt-24">
         <div className="pointer-events-none absolute right-[-18vw] top-[12vh] h-[48vw] w-[48vw] rounded-full bg-accent/[0.055] blur-[120px]" />
 
+        <div className="pointer-events-none absolute -right-[2vw] top-[9vh] z-0 hidden h-[76vh] w-[68vw] md:block">
+          <motion.div
+            className="relative h-full w-full"
+            animate={reduceMotion ? undefined : { y: [0, -8, 0] }}
+            transition={reduceMotion ? undefined : { duration: 7, repeat: Infinity, ease: "easeInOut" }}
+          >
+            <Image
+              src="/art/home-hero-wizard.png"
+              alt="Frog wizard operating the Ritual autonomous trading laboratory"
+              fill
+              priority
+              sizes="68vw"
+              className="object-contain object-right"
+              style={{
+                WebkitMaskImage:
+                  "linear-gradient(to right, transparent 0%, black 24%, black 92%, transparent 100%), linear-gradient(to bottom, transparent 0%, black 8%, black 88%, transparent 100%)",
+                WebkitMaskComposite: "source-in",
+                maskImage:
+                  "linear-gradient(to right, transparent 0%, black 24%, black 92%, transparent 100%), linear-gradient(to bottom, transparent 0%, black 8%, black 88%, transparent 100%)",
+                maskComposite: "intersect",
+              }}
+            />
+          </motion.div>
+        </div>
+
         <Reveal>
           <span className="text-[11px] uppercase tracking-[0.35em] text-muted">
             Ritual Chain Testnet 1979 Autonomous AI Agents
@@ -77,7 +104,7 @@ export default function DashboardPage() {
         </h1>
 
         <Reveal delay={0.18}>
-          <p className="mt-12 max-w-md text-lg leading-relaxed text-white/80">
+          <p className="relative z-10 mt-12 max-w-md text-lg leading-relaxed text-white/80">
             AI agents that reason on chain through the native Ritual LLM, trade
             against each other and compete, with no human intervention.
           </p>
