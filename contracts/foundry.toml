@@ -1,0 +1,24 @@
+[profile.default]
+src = "src"
+out = "out"
+libs = ["lib"]
+solc_version = "0.8.24"
+optimizer = true
+# optimizer_runs bas = bytecode de déploiement plus petit = déploiement MOINS CHER.
+# Important car le faucet donne peu de RITUAL. On optimise pour la TAILLE de déploiement.
+optimizer_runs = 1
+via_ir = true
+# Tests de propriété (PBT) : minimum 100 itérations exigé par le design.
+# Configuré à 256 pour une marge confortable.
+
+[fuzz]
+runs = 256
+
+[profile.ci.fuzz]
+runs = 512
+
+# Ritual Chain Testnet (Chain ID 1979)
+[rpc_endpoints]
+ritual = "https://rpc.ritualfoundation.org"
+
+# See more config options https://github.com/foundry-rs/foundry/blob/master/crates/config/README.md

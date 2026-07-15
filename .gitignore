@@ -1,0 +1,51 @@
+# Secrets and local environment
+**/.env
+**/.env.*
+!**/.env.example
+fenv.sh
+
+# Dependencies and build outputs
+**/node_modules/
+**/.next/
+**/.next-*/
+**/out/
+**/cache/
+contracts/broadcast/
+.ritual-build/
+*.tsbuildinfo
+next-env.d.ts
+
+# Keep only the forge-std sources required to compile this project
+contracts/lib/forge-std/*
+!contracts/lib/forge-std/src/
+!contracts/lib/forge-std/src/**
+!contracts/lib/forge-std/LICENSE-APACHE
+!contracts/lib/forge-std/LICENSE-MIT
+!contracts/lib/forge-std/README.md
+
+# Hosting metadata
+**/.vercel/
+
+# Local agent/editor state
+.agents/
+.codex/
+.kiro/
+.ritual-skills/
+.vscode/
+
+# Runtime logs and local diagnostics
+*.log
+contracts/ETAT_ET_SUITE.md
+frontend/scripts/ritual-*.mjs
+frontend/scripts/gen-test-art.mjs
+!frontend/scripts/ritual-solc-tests.mjs
+!frontend/scripts/ritual-solc-deploy-scripts.mjs
+!frontend/scripts/ritual-solc.mjs
+
+# Local backups
+*.tgz
+*.zip
+
+# OS files
+.DS_Store
+Thumbs.db
