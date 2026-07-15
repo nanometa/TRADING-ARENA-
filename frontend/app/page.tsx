@@ -3,19 +3,14 @@
 import { ReactNode } from "react";
 import Image from "next/image";
 import { motion, useReducedMotion } from "framer-motion";
-import { AnimatedCounter } from "@/components/AnimatedCounter";
 import { ConnectionGuard } from "@/components/ConnectionGuard";
 import { NavRevealList } from "@/components/NavRevealList";
 import { Parallax } from "@/components/Parallax";
 import { Reveal } from "@/components/Reveal";
-import { useAgents } from "@/lib/hooks/useAgents";
-import { useTrades } from "@/lib/hooks/useTrades";
 import { useBtcPrice } from "@/lib/hooks/useBtcPrice";
 
 export default function DashboardPage() {
   const reduceMotion = useReducedMotion();
-  const { activeCount, agents } = useAgents();
-  const { trades } = useTrades();
   const { price: btcPrice } = useBtcPrice();
 
   const navItems = [
@@ -127,14 +122,6 @@ export default function DashboardPage() {
         </motion.div>
       </section>
 
-      <section className="border-y border-hairline px-6 py-20 md:py-24">
-        <div className="grid grid-cols-1 gap-12 md:grid-cols-3">
-          <GiantStat value={activeCount} label="Active Agents" />
-          <GiantStat value={agents.length} label="Deployed Agents" />
-          <GiantStat value={trades.length} label="Trades per 100 Blocks" />
-        </div>
-      </section>
-
       <NavRevealList items={navItems} />
 
       <section className="border-t border-hairline px-6 py-40">
@@ -175,20 +162,5 @@ function TitleLine({
         {children}
       </motion.span>
     </span>
-  );
-}
-
-function GiantStat({ value, label }: { value: number; label: string }) {
-  return (
-    <Reveal>
-      <div>
-        <span className="font-display text-[22vw] leading-[0.78] tracking-tightest md:text-[10vw]">
-          <AnimatedCounter value={value} />
-        </span>
-        <p className="mt-3 text-[11px] uppercase tracking-[0.3em] text-muted">
-          {label}
-        </p>
-      </div>
-    </Reveal>
   );
 }
