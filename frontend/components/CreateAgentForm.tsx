@@ -1,7 +1,12 @@
 "use client";
 
 import { useState } from "react";
-import { validateCreateAgentForm, STRATEGIES } from "@/lib/validators";
+import {
+  MAX_CAPITAL,
+  MIN_CAPITAL,
+  STRATEGIES,
+  validateCreateAgentForm,
+} from "@/lib/validators";
 import { useCreateAgent } from "@/lib/hooks/useCreateAgent";
 import { useExecutorHealth } from "@/lib/hooks/useExecutorHealth";
 import { useDeploymentHealth } from "@/lib/hooks/useDeploymentHealth";
@@ -66,9 +71,12 @@ export function CreateAgentForm() {
         <input
           type="number"
           step="0.01"
+          min={MIN_CAPITAL}
+          max={MAX_CAPITAL}
+          inputMode="decimal"
           value={capital}
           onChange={(e) => setCapital(e.target.value)}
-          className="w-full border border-ink bg-transparent px-4 py-3 text-sm focus:border-accent focus:outline-none"
+          className="w-full border border-ink bg-transparent px-4 py-3 text-sm tabular-nums focus:border-accent focus:outline-none"
         />
       </div>
 
