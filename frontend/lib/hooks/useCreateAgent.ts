@@ -18,8 +18,8 @@ function friendlyCreationError(error: unknown) {
   if (lower.includes("insufficient funds")) {
     return "Insufficient RITUAL balance for this operation.";
   }
-  if (lower.includes("executor unavailable") || lower.includes("llm service")) {
-    return "Ritual LLM service is temporarily unavailable. No transaction was sent.";
+  if (lower.includes("no registered ritual llm executor")) {
+    return "No registered Ritual LLM executor is available.";
   }
   if (lower.includes("deployment") || lower.includes("factory")) {
     return "Ritual Arena contracts are not ready for safe agent creation. No transaction was sent.";
@@ -60,7 +60,7 @@ export function useCreateAgent() {
       }
 
       // Both checks happen before the first wallet request: the backend verifies
-      // the deployed Factory wiring/bytecode and a recent real LLM settlement.
+      // the deployed Factory wiring/bytecode and discovers registered executors.
       setStep("Verifying Ritual services…");
       const [deployment, executorHealth] = await Promise.all([
         fetchDeploymentHealth(),
@@ -69,9 +69,13 @@ export function useCreateAgent() {
       if (!deployment.creationReady) {
         throw new Error("Ritual Arena deployment is not ready for safe creation.");
       }
-      const llmExecutor = executorHealth.recommendedExecutor;
+      // Prefer a recently healthy executor. If Ritual currently reports none as
+      // healthy, still allow the user-requested transaction with the first valid
+      // executor registered for the LLM capability.
+      const llmExecutor =
+        executorHealth.recommendedExecutor ?? executorHealth.executors[0]?.address;
       if (!llmExecutor) {
-        throw new Error("Ritual LLM executor unavailable. No transaction was sent.");
+        throw new Error("No registered Ritual LLM executor is available.");
       }
 
       // 1) Créer l'agent via la Factory.
