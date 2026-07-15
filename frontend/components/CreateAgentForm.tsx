@@ -8,7 +8,6 @@ import {
   validateCreateAgentForm,
 } from "@/lib/validators";
 import { useCreateAgent } from "@/lib/hooks/useCreateAgent";
-import { useExecutorHealth } from "@/lib/hooks/useExecutorHealth";
 import { useDeploymentHealth } from "@/lib/hooks/useDeploymentHealth";
 import { TxErrorToast } from "./TxErrorToast";
 
@@ -21,10 +20,7 @@ export function CreateAgentForm() {
   const [success, setSuccess] = useState<string | null>(null);
 
   const { createAgent, isPending, error, step } = useCreateAgent();
-  const executorHealth = useExecutorHealth();
   const deploymentHealth = useDeploymentHealth();
-  const servicesLoading = executorHealth.isLoading || deploymentHealth.isLoading;
-  const creationReady = executorHealth.isHealthy && deploymentHealth.isCreationReady;
 
   async function onSubmit(e: React.FormEvent) {
     e.preventDefault();
@@ -93,19 +89,13 @@ export function CreateAgentForm() {
           readyLabel={`Latest Factory connected · ${deploymentHealth.data?.activeAgents ?? "0"} active agents`}
           waitingLabel="Arena contracts are syncing. Creation remains protected."
         />
-        <ServiceState
-          loading={executorHealth.isLoading}
-          ready={executorHealth.isHealthy}
-          readyLabel="Ritual autonomous execution services are ready."
-          waitingLabel="Agent creation will open automatically when all Ritual services are ready."
-        />
       </div>
 
       {fieldError && <p className="text-sm text-accent">{fieldError}</p>}
 
       <button
         type="submit"
-        disabled={isPending || servicesLoading || !creationReady}
+        disabled={isPending || deploymentHealth.isLoading || !deploymentHealth.isCreationReady}
         className="bg-ink px-7 py-4 text-xs uppercase tracking-[0.2em] text-paper transition-colors duration-500 hover:bg-accent disabled:opacity-50"
       >
         {isPending ? (step ? step : "Creating…") : "Create Agent"}
